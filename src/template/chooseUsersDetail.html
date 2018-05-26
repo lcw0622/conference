@@ -1,0 +1,51 @@
+<ion-view view-title="{{vm.dTitle}}" hide-back-button="true">
+	<ion-nav-buttons side="left">
+		<button class="button button-icon icon ion-ios-arrow-back" on-tap="vm.goBack()">返回</button>
+	</ion-nav-buttons>
+	<ion-content class="has-footer">
+		<div class="body-scroller">
+        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('a')">
+            <div class="item-avatar {{vm.a?'checked':''}}">
+               <img src="img/demo-avatar.jpg">
+             </div>
+            <p>欧阳峰</p>
+        </div>
+        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('b')">
+            <div class="item-avatar {{vm.b?'checked':''}}">
+               <img src="img/demo-avatar.jpg">
+             </div>
+            <p>小明</p>
+        </div>
+        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('c')">
+            <div class="item-avatar {{vm.c?'checked':''}}">
+               <img src="img/demo-avatar.jpg">
+             </div>
+            <p>小红</p>
+        </div>
+        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('d')">
+            <div class="item-avatar {{vm.d?'checked':''}}">
+               <img src="img/demo-avatar.jpg">
+             </div>
+            <p>小新</p>
+        </div>
+        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('e')">
+            <div class="item-avatar {{vm.e?'checked':''}}">
+               <img src="img/demo-avatar.jpg">
+             </div>
+            <p>dave</p>
+        </div>
+        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('f')">
+            <div class="item-avatar {{vm.f?'checked':''}}">
+               <img src="img/demo-avatar.jpg">
+             </div>
+            <p>小二</p>
+        </div>
+		</div>
+	</ion-content>
+	<ion-footer-bar ng-if="vm.isDetail" align-title="left">
+		<div class="body-scroller text-center">
+			<button class="button button-positive btn-style" ng-click="vm.saveBtnClick()" >保存开会人员</button>
+		</div>
+	</ion-footer-bar>
+	<div class="loading-mask" class="loading-mask" ng-if="vm.isActive"></div>
+</ion-view>
