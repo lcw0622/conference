@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="cb6f1cf6-72f7-4a9d-a4df-3e17ad072d81" name="TXCloud" url="http://118.24.151.116:3000">
+        <fileTransfer host="118.24.151.116" port="22" privateKey="C:\Users\Administrator\Desktop\TXCLOUD" rootFolder="/root" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

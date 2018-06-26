@@ -40,31 +40,83 @@
         // });
 
 
+
         // 假数据
         var url = '/js/json/' + postMethod + '.json';
-        var base = 'http://121.196.221.153:8085/meeting-manager/conferenceOpenApi/'
-        var params = {}
-        var method = 'GET'
-        var userId = '402881f761d6c2ce0161d6c2d5850000'
+        var base = 'http://121.196.221.153:8085/meeting-manager/conferenceOpenApi/';
+        var params = {};
+        var method = 'GET';
+        var userId = '402881f761d6c2ce0161d6c2d5850000';
+        bObj.userId = userId
+        var callback = null
+        var defaultCb = function (resp) {
+          callBack(resp.data)
+        }
+        var headers = null
 
         switch (postMethod) {
           case 'getMySubscribe': {
-            url = base + 'recentConferenceApplyList'
-            params = {userId: userId, orderBy: 1}
-            method = 'POST'
+            url = base + 'recentConferenceApplyList';
+            params = bObj;
+            method = 'POST';
+            callback = defaultCb
             break;
           }
+          case 'getRecentConferenceApplyList': {
+            url = base + 'recentConferenceApplyList';
+            params = {userId: userId, orderBy: 1, pageNum: 0, pageSize: 10};
+            method = 'POST';
+            callback = defaultCb
+            break;
+          }
+          case 'getRoomList': {
+            url = base + 'reserveInfoByDay';
+            params = bObj
+            method = 'POST';
+            callback = defaultCb
+            break;
+          }
+          case 'getRoomById': {
+            url = base + 'boardroom';
+            params = bObj
+            method = 'POST';
+            callback = defaultCb
+            break;
+          }
+
+          case 'conference': {
+            url = base + 'conference';
+            params = bObj;
+            method = 'POST';
+            callback = defaultCb
+            break;
+          }
+          case 'history': {
+            url = base + 'conferenceApplyHistoryList';
+            params = bObj;
+            method = 'POST';
+            callback = defaultCb
+            break;
+          }
+          case 'apply': {
+            url = base + 'saveOrUpdate';
+            params = bObj;
+            method = 'POST';
+            callback = defaultCb;
+          }
         }
+        console.log(url)
         $http({
-          method: 'GET',
+          method: method,
           url: url,
-          params: params
+          params: params,
+          headers: headers
         }).then(function (response) {
-          // alert('message?: DOMString')
           console.log(response);
-          callBack(response.data);
+          if(callback)callback(response)
+          else callBack(response.data.res);
         }, function (response) {
-          console.log('失败的网络请求：', response);
+          console.log('失败的网络请求：', response.headers());
           //alert('失败的网络请求：' + JSON.stringify(response));
           // 模态框
           $ionicLoading.show({
@@ -89,15 +141,16 @@
             $rootScope.id = angular.fromJson(msg).args;
           },
           'pluginInit': function () {
+            alert('init')
             ns.runtime.appAuthorization({
               'onSuccess': function (st) {
+                alert(st)
                 $rootScope.sso = st['obj']['ssoTicket'];
                 if ($rootScope.id == undefined || $rootScope.id == '') {
                   callBack();
                 } else {
                   $state.go('chooseUsers', {'flag': 2, 'id': $rootScope.id});
                 }
-
               },
               'onFail': function (err) {
                 console.log('sso失败', err);
@@ -138,13 +191,27 @@
 
             var returnDate = {};
             //判断是否是首页
-            if ($location.path() != '/list') {
+            if ($location.path() != '/home') {
               returnDate.isNotRoot = true;
             } else {
               returnDate.isNotRoot = false;
             }
-            // alert(JSON.stringify(returnDate));
             responseCallback(returnDate);
+          }
+        });
+
+        ns.runtime.appAuthorization({
+          'onSuccess': function (st) {
+            alert(st)
+            $rootScope.sso = st['obj']['ssoTicket'];
+            if ($rootScope.id == undefined || $rootScope.id == '') {
+              callBack();
+            } else {
+              $state.go('chooseUsers', {'flag': 2, 'id': $rootScope.id});
+            }
+          },
+          'onFail': function (err) {
+            console.log('sso失败', err);
           }
         });
       }

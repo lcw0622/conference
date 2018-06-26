@@ -1,52 +1,79 @@
 <ion-view view-title="{{vm.dTitle}}" hide-back-button="true">
 	<ion-nav-buttons side="left">
-		<button class="button button-icon icon ion-ios-arrow-back" on-tap="vm.goBack()">返回</button>
+		<button class="button button-icon icon ion-ios-arrow-back" ng-click="vm.goBack()"></button>
 	</ion-nav-buttons>
 	<ion-content class="has-footer">
 		<div class="body-scroller">
 			<ion-list class="mb10 c4A f16 ">
 				<ion-item class="subscribe item-borderless">
 					<div class="row">
-						<div class="col col-25 titleMeet-25">会议室 :</div>
-						<div class="col col-75">{{vm.roomName}}</div>
-					</div>
-				</ion-item>
-				<ion-item class="subscribe item-borderless">
-					<div class="row">
-						<div class="col col-25 titleMeet-25">预订人 :</div>
-						<div class="col col-75 ">{{vm.loginName}}</div>
-					</div>
-				</ion-item>
-				<ion-item class="subscribe item-borderless">
-					<div class="row">
-						<div class="col col-25 titleMeet-25">会议主题 :</div>
 						<div class="col col-75 " ng-if="vm.isDetail == false">{{vm.meetingTitle}}</div>
 						<div class="col col-75 " ng-if="vm.isDetail == true">
-							<input type="text" maxlength="35" ng-if="vm.isDetail" style="margin-top: -5px;width: 80%;" ng-model="vm.meetingTitle"/>
+							<input type="text" maxlength="35" ng-if="vm.isDetail"
+								   style="margin-top: -5px;width: 80%;"
+								   placeholder="输入会议标题"
+								   ng-model="vm.meetingTitle"/>
 						</div>
 					</div>
 				</ion-item>
 				<ion-item class="subscribe item-borderless">
 					<div class="row">
-						<div class="col col-25 titleMeet-25">参会人员 :</div>
-						<div class="col col-75 " ng-if="vm.isDetail == true">
+						<div class="col col-25 titleMeet-25">日期</div>
+						<div class="col col-75 ar">{{vm.meetingTime}}</div>
+						<!-- <div class="padding0" style="width:90px">会议时间 :</div> -->
+					</div>
+				</ion-item>
+				<!--<ion-item class="subscribe item-borderless">-->
+					<!--<div class="row">-->
+						<!--<div class="col col-25 titleMeet-25">时间</div>-->
+						<!--<div class="col col-75 ar">{{vm.meetingTime}}</div>-->
+						<!--&lt;!&ndash; <div class="padding0" style="width:90px">会议时间 :</div> &ndash;&gt;-->
+					<!--</div>-->
+				<!--</ion-item>-->
+				<ion-item class="subscribe item-borderless">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">地点</div>
+						<div class="col col-75 ar">{{vm.roomName}}</div>
+					</div>
+				</ion-item>
+				<ion-item class="subscribe item-borderless">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">发布人员</div>
+						<div class="col col-75 ar">{{vm.loginName}}</div>
+					</div>
+				</ion-item>
+				<ion-item class="subscribe item-borderless">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">发布单位</div>
+						<div class="col col-75 ar">{{vm.loginName}}</div>
+					</div>
+				</ion-item>
+
+				<div class="split"></div>
+				<ion-item class="subscribe item-borderless">
+					<div class="up-down-block">
+						<div class="title">参会人员</div>
+						<div class="" ng-if="vm.isDetail == true">
 							<span  class="iconEdit right-text" ng-click="vm.chooseUsers()"></span>
 							<div class="text-ww">
 		                        <label ng-model="vm.memberNames">{{vm.memberNames}}</label>
 		                    </div>
 						</div>
-						<div class="col col-75 " ng-if="vm.isDetail == false">
-							<div class="text-ww">
-		                        <label ng-model="vm.memberNames">{{vm.memberNames}}</label>
-		                    </div>
+						<div class="" ng-if="vm.isDetail == false">
+							<div class="avatar-wrapper">
+								<div class="avatar-circle"></div>
+								<label ng-model="vm.memberNames">{{vm.memberNames}}</label>
+							</div>
 						</div>
 					</div>
 				</ion-item>
+
+				<div class="split"></div>
+
 				<ion-item class="subscribe item-borderless">
-					<div class="row">
-						<div class="col col-25 titleMeet-25">会议时间 :</div>
-						<div class="col col-75 ">{{vm.meetingTime}}</div>
-                   		<!-- <div class="padding0" style="width:90px">会议时间 :</div> -->
+					<div class="up-down-block">
+						<div class="title">会议说明</div>
+						<input type="text" placeholder="输入会议说明" ng-model="vm.content">
 					</div>
 				</ion-item>
 				<ion-item ng-if="vm.isDetail" class="subscribe item-borderless">
@@ -62,6 +89,7 @@
 						</div>
 					</div>
 				</ion-item>
+
 			</ion-list>
 		</div>
 	</ion-content>

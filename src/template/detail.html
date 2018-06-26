@@ -1,6 +1,6 @@
 <ion-view view-title="预订详情" hide-back-button="true">
 	<ion-nav-buttons side="left">
-		<button class="button button-icon icon ion-ios-arrow-back" on-tap="vm.goBack()">返回</button>
+		<button class="button button-icon icon ion-ios-arrow-back" on-tap="vm.goBack()"></button>
 	</ion-nav-buttons>
 	<ion-content class="has-footer">
 		<div style="margin: 0 auto;">
@@ -15,32 +15,26 @@
 			</ion-item>
 			<ion-item class="detailItem item-borderless">
 				<div class="row padding0">
-					<div class="col col-33 padding0">会议室面积 : </div>
-					<div class="col col-50 padding0">{{ vm.details['area.s'] }} ㎡ </div>
+					<div class="col col-33 padding0">会议室地址 : </div>
+					<div class="col col-50 padding0">{{ vm.details['floor'] + vm.details['room'] }}</div>
 				</div>
 			</ion-item>
 			<ion-item class="detailItem item-borderless">
 				<div class="row padding0">
 					<div class="col col-33 padding0">可容纳人数 :</div>
-					<div class="col col-50 padding0">{{ vm.details['volume.s'] }}人</div>
+					<div class="col col-50 padding0">{{ vm.details['capacity'] }}人</div>
 				</div>
 			</ion-item>
 			<ion-item class="detailItem item-borderless">
 				<div class="row padding0">
 					<div class="col col-33 padding0">会议室管理员 :</div>
-					<div class="col padding0">{{ vm.details['manager.s'] }} </div>
+					<div class="col padding0">{{ vm.details['createUserId'] }} </div>
 				</div>
 			</ion-item>
 			<ion-item class="detailItem item-borderless">
 				<div class="row padding0">
 					<div class="col col-33 padding0">提供设备 :</div>
-					<div class="col col-67 padding0 text-ww">{{vm.details['config.s']}}</div>
-				</div>
-			</ion-item>
-			<ion-item class="detailItem item-borderless">
-				<div class="row padding0">
-					<div class="col col-33 padding0">会议室配置 :</div>
-					<div class="col col-67 padding0 text-ww">{{vm.details['device.s']}}</div>
+					<div class="col col-67 padding0 text-ww">{{vm.details['meetingType']}}</div>
 				</div>
 			</ion-item>
 		</ion-list>

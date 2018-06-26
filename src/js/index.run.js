@@ -7,14 +7,14 @@
 		.run(dateTimePicker);
 
 	function init($rootScope) {
-		// if(navigator.platform == 'Win32' || navigator.platform == 'MacIntel') {
-		// 	//$rootScope.ssoTicket = 'edae750955d859f080c48b807cd21808'; //yun1游客
-		// 	//$rootScope.ssoTicket = 'bdc58edba2ddc4292d08729197b7e1ce'; //yun1
-		// 	$rootScope.ssoTicket = '68a8749e4ce900dda838f1505181b3e4'; //
-		// 	$rootScope.parkID = 'P001';
-		// }
-
-		$rootScope.sso = 'MTkyLjE2OC4yMDAuMTIy|NjZkMDZjMDAxMzRjODQyZTQ4ZTcwZDZmOTk0ZDg3MWVlMzgxYWIyOGU1NTM5NjBjMWYzZWU4Y2EzNWU0Nzk2Yg==|opWiZVsdBn+YSv1WecWvLT/V3qM=';
+		if(navigator.platform == 'Win32' || navigator.platform == 'MacIntel') {
+			//$rootScope.ssoTicket = 'edae750955d859f080c48b807cd21808'; //yun1游客
+			//$rootScope.ssoTicket = 'bdc58edba2ddc4292d08729197b7e1ce'; //yun1
+			// $rootScope.ssoTicket = '68a8749e4ce900dda838f1505181b3e4'; //
+			// $rootScope.parkID = 'P001';
+		}
+		alert('init')
+		// $rootScope.sso = 'MTkyLjE2OC4yMDAuMTIy|NjZkMDZjMDAxMzRjODQyZTQ4ZTcwZDZmOTk0ZDg3MWVlMzgxYWIyOGU1NTM5NjBjMWYzZWU4Y2EzNWU0Nzk2Yg==|opWiZVsdBn+YSv1WecWvLT/V3qM=';
 	}
 	function dateTimePicker($ionicPickerI18n) {
 		$ionicPickerI18n.weekdays = ['日', '一', '二', '三', '四', '五', '六'];

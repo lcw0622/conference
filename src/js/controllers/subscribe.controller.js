@@ -37,24 +37,19 @@
             return $sce.trustAsResourceUrl(src);
         }
         function getDatas() {
-            vm.params = {
-                'ssoTicket.s': $rootScope.sso,
-                'startRows.i': vm.startRows,
-                'pageSize.i': vm.pageSize
-            };
+            vm.params = {orderBy: 1, pageNum: 0, pageSize: 10};
 
             publicService.sendRequest('getMySubscribe', vm.params, function(msg) {
                 console.log(msg);
-                vm.code = msg.status;
-                if (vm.code) {
+                vm.code = msg.status ? 0 : -1;
+                if (vm.code === 0) {
                     // 判断是否执行滚动加载
-                    vm.listData = msg.data.shift();
-                    vm.lists = msg.data;
-                    vm.count = msg.data.length;
+                    vm.lists = msg.data.datas;
+                    vm.count = msg.data.count;
                     vm.isActive = false;
                     if (vm.count < vm.pageSize) {
                         vm.disabled = false;
-                        if (~~vm.count === 0) {
+                        if (vm.count == 0) {
                             vm.dataTips = '';
                         } else {
                             vm.dataTips = '数据已全部加载完成';

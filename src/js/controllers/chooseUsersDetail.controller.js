@@ -37,51 +37,51 @@
                 e: 'dave',
                 f: '小二'
             };
-            vm[item]=!vm[item];
+            vm[item] = !vm[item];
 
             var all_user = localStorage.getItem('names');
-            var name
+            var name;
             if (all_user.indexOf(person[item]) != '-1') {
-                name = all_user.replace(' '+person[item], '');
+                name = all_user.replace(' ' + person[item], '');
             }else {
                 name = all_user + ' ' + person[item];
             }
             localStorage.setItem('names', name);
             return false;
-
-            var list = [], i;
-            ns.runtime.contact({
-                'onSuccess': function(msg) {
-                    list = msg.obj;
-                    vm.memberNames = '';
-                    vm.memberIds = '';
-                    vm.memberLoginNames = '';
-                    for (i = 0; i < list.length; i += 1) {
-                        if (( i + 1 ) == list.length) {
-                            vm.memberNames += list[i]['user'].realName;
-                            vm.memberLoginNames += list[i]['user'].userName;
-                            vm.memberIds += list[i]['userAgencyJobs'][0]['userId'];
-                        } else {
-                            vm.memberNames += list[i]['user'].realName + ',';
-                            vm.memberLoginNames += list[i]['user'].userName + ',';
-                            vm.memberIds += list[i]['userAgencyJobs'][0]['userId'] + ',';
-                        }
-                    }
-                    //处理返回后无法自动刷新立刻显示的问题
-                    setTimeout(function () {
-                        $scope.$apply(function () {
-                            vm.memberNames = vm.memberNames;
-                        });
-                    }, 200);
-                },
-                'onFail': function(msg) {
-                    $ionicLoading.show({
-                        template: '<span class="tips">人员选择打开失败</span>',
-                        noBackdrop: true,
-                        duration: 2000
-                    });
-                }
-            });
+            //
+            // var list = [], i;
+            // ns.runtime.contact({
+            //     'onSuccess': function(msg) {
+            //         list = msg.obj;
+            //         vm.memberNames = '';
+            //         vm.memberIds = '';
+            //         vm.memberLoginNames = '';
+            //         for (i = 0; i < list.length; i += 1) {
+            //             if (( i + 1 ) == list.length) {
+            //                 vm.memberNames += list[i]['user'].realName;
+            //                 vm.memberLoginNames += list[i]['user'].userName;
+            //                 vm.memberIds += list[i]['userAgencyJobs'][0]['userId'];
+            //             } else {
+            //                 vm.memberNames += list[i]['user'].realName + ',';
+            //                 vm.memberLoginNames += list[i]['user'].userName + ',';
+            //                 vm.memberIds += list[i]['userAgencyJobs'][0]['userId'] + ',';
+            //             }
+            //         }
+            //         //处理返回后无法自动刷新立刻显示的问题
+            //         setTimeout(function () {
+            //             $scope.$apply(function () {
+            //                 vm.memberNames = vm.memberNames;
+            //             });
+            //         }, 200);
+            //     },
+            //     'onFail': function(msg) {
+            //         $ionicLoading.show({
+            //             template: '<span class="tips">人员选择打开失败</span>',
+            //             noBackdrop: true,
+            //             duration: 2000
+            //         });
+            //     }
+            // });
         }
         function saveBtnClick() {
             if (vm.meetingTitle == undefined || vm.meetingTitle == '') {
