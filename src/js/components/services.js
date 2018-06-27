@@ -1,12 +1,12 @@
 (function () {
   'use strict';
-
+  var uid = ''
   angular.module('app')
     .factory('publicService', publicService)
     .factory('getSSOticket', getSSOticket);
 
   // publicService
-  function publicService($http, $ionicLoading, postURL, postAPI) {
+  function publicService($http, $ionicLoading, $rootScope, postURL, postAPI) {
     return {
       sendRequest: function (postMethod, bObj, callBack) {
         // $http({
@@ -46,7 +46,7 @@
         var base = 'http://121.196.221.153:8085/meeting-manager/conferenceOpenApi/';
         var params = {};
         var method = 'GET';
-        var userId = '402881f761d6c2ce0161d6c2d5850000';
+        var userId = $rootScope.sso;
         bObj.userId = userId
         var callback = null
         var defaultCb = function (resp) {
@@ -135,85 +135,13 @@
   function getSSOticket($rootScope, $state, $ionicHistory, $location) {
     return {
       getTicket: function (callBack) {
-        console.log(ns)
-        ns.ready({
-          'push': function (msg) {
-            $rootScope.id = angular.fromJson(msg).args;
-          },
-          'pluginInit': function () {
-            alert('init')
-            ns.runtime.appAuthorization({
-              'onSuccess': function (st) {
-                alert(st)
-                $rootScope.sso = st['obj']['ssoTicket'];
-                if ($rootScope.id == undefined || $rootScope.id == '') {
-                  callBack();
-                } else {
-                  $state.go('chooseUsers', {'flag': 2, 'id': $rootScope.id});
-                }
-              },
-              'onFail': function (err) {
-                console.log('sso失败', err);
-              }
-            });
-            if (ns.android == true) {
-              ns.device.initGoBack({
-                'isBackBound': true,
-                'onSuccess': function (msg) {
-                  // alert('成功' + JSON.stringify(msg));
-                },
-
-                'onFail': function (msg) {
-                  // alert('失败' + JSON.stringify(msg));
-                }
-              });
-            }
-          },
-          'goBack': function (responseCallback) {
-            // 关闭
-            if ($rootScope.backStatus == 'close') {
-              ns.runtime.closePage();
-            }
-
-            // 详情
-            if ($rootScope.backStatus == 'detail') {
-              if ($rootScope.backType == 'push') {
-                ns.runtime.closePage();
-              } else {
-                $ionicHistory.goBack();
-              }
-
-            }
-
-            if ($rootScope.backStatus == 'list' || $rootScope.backStatus == 'search') {
-              $ionicHistory.goBack();
-            }
-
-            var returnDate = {};
-            //判断是否是首页
-            if ($location.path() != '/home') {
-              returnDate.isNotRoot = true;
-            } else {
-              returnDate.isNotRoot = false;
-            }
-            responseCallback(returnDate);
-          }
-        });
-
-        ns.runtime.appAuthorization({
-          'onSuccess': function (st) {
-            alert(st)
-            $rootScope.sso = st['obj']['ssoTicket'];
-            if ($rootScope.id == undefined || $rootScope.id == '') {
-              callBack();
-            } else {
-              $state.go('chooseUsers', {'flag': 2, 'id': $rootScope.id});
-            }
-          },
-          'onFail': function (err) {
-            console.log('sso失败', err);
-          }
-        });
+        // console.log(ns)
+        var query = decodeURIComponent(window.location.search.replace(/^\?/, ''))
+        var token = query.match(/token=([a-z\d\-]+)/)[1]
+        uid = token
+        $rootScope.sso = token
+        // alert(token)
+        callBack()
       }
     };
   }

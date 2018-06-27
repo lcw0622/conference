@@ -13,8 +13,10 @@
 			// $rootScope.ssoTicket = '68a8749e4ce900dda838f1505181b3e4'; //
 			// $rootScope.parkID = 'P001';
 		}
-		alert('init')
-		// $rootScope.sso = 'MTkyLjE2OC4yMDAuMTIy|NjZkMDZjMDAxMzRjODQyZTQ4ZTcwZDZmOTk0ZDg3MWVlMzgxYWIyOGU1NTM5NjBjMWYzZWU4Y2EzNWU0Nzk2Yg==|opWiZVsdBn+YSv1WecWvLT/V3qM=';
+    var query = decodeURIComponent(window.location.search.replace(/^\?/, ''))
+    var token = query.match(/token=([a-z\d\-]+)/)[1]
+		console.log(token)
+		$rootScope.sso = token
 	}
 	function dateTimePicker($ionicPickerI18n) {
 		$ionicPickerI18n.weekdays = ['日', '一', '二', '三', '四', '五', '六'];
