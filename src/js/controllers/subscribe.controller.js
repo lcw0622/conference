@@ -31,6 +31,25 @@
             $scope.$on('$ionicView.afterEnter', function(){
                 vm.getDatas();
             });
+
+          var query = decodeURIComponent(window.location.search.replace(/^\?/, ''))
+          var token = query.match(/token=([a-z\d\-]+)/)[1]
+          var username = query.match(/username=([a-z\d\-]+)/)[1]
+          vm.token = token
+          vm.username = username
+
+          appnest.config.getUserInfo({
+            success: function (res) {
+              vm.username= res.userName; // 用户名
+              vm.password= res.password;//用户密码
+              vm.token= res.loginId;//用户标识
+              vm.imAccount= res.imAccount;//用户 IM 账号
+              vm.photoUrl = res.photoUrl; //用户头像地址
+            },
+            fail: function (res) {
+              alert(res.errMsg);
+            }
+          });
         }
 
         function formatSrc(src) {
@@ -164,7 +183,7 @@
          * 返回上一页
          */
         function goBack() {
-            $state.go('list', {});
+            window.history.go(-1)
         }
     }
 })();

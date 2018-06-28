@@ -26,4 +26,12 @@
 		$ionicPickerI18n.okClass = 'button-energized';
 		$ionicPickerI18n.cancelClass = 'button-stable';
 	}
+
+	if (window.appnest === undefined) {
+		window.appnest = {
+			config: {
+				getUserInfo: function(){}
+			}
+		}
+	}
 })();

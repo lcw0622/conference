@@ -56,7 +56,10 @@
 						<div class="" ng-if="vm.isDetail == true">
 							<span  class="iconEdit right-text" ng-click="vm.chooseUsers()"></span>
 							<div class="text-ww">
-		                        <label ng-model="vm.memberNames">{{vm.memberNames}}</label>
+								<label>
+									<span ng-repeat="user in vm.selected">{{user.selected?user.name+',':''}}</span>
+								</label>
+
 		                    </div>
 						</div>
 						<div class="" ng-if="vm.isDetail == false">

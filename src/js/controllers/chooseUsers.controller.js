@@ -21,6 +21,7 @@
     vm.noticeSelect = '2';
     vm.isDetail = true; //判断false是选择页面 ,true是展示详情的页面
     vm.isActive = true;
+    vm.selected = $rootScope.selected
     $rootScope.backStatus = 'detail';
     vm.init();
 
@@ -121,13 +122,21 @@
     }
 
     function saveBtnClick() {
+      var participants = ''
+      console.log(vm.selected)
+      var uids = Object.keys(vm.selected)
+      uids.forEach(function(userId){
+        if(vm.selected[userId].selected){
+          participants = participants + vm.selected[userId].id + ','
+        }
+      })
       var params = {
         name: vm.meetingTitle,
         content: vm.content,
         agenda: vm.agenda,
         boardroomId: vm.roomId,
         meetingType: '1',
-        participants: '2c9038266306de510163075f86890002,2c903826630c13df01630c533f6b0002,2c903826630c13df01630c539cea0003,2c903826630c13df01630c57d4ee0008,402881f761d6c2ce0161d6c2d5850000',
+        participants: participants,
         fileIds: '',
         reserveInfo: vm.dateValue + '_' + vm.reserveType
       };

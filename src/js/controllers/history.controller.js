@@ -20,6 +20,7 @@
     var date = new Date();
     vm.formatSrc = formatSrc;
     vm.closePage = closePage;
+    vm.goBack = goBack;
     vm.init = init;
     vm.getHistoryList = getHistoryList;
     vm.pushRefresh = pushRefresh;
@@ -152,7 +153,8 @@
     }
 
     function goBack() {
-      $state.go('chooseUsers', {})
+      console.log('-1')
+      window.history.go(-1)
     }
   }
 })();

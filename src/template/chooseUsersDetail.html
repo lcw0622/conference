@@ -4,42 +4,12 @@
 	</ion-nav-buttons>
 	<ion-content class="has-footer">
 		<div class="body-scroller">
-        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('a')">
-            <div class="item-avatar {{vm.a?'checked':''}}">
-               <img src="img/demo-avatar.jpg">
-             </div>
-            <p>欧阳峰</p>
-        </div>
-        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('b')">
-            <div class="item-avatar {{vm.b?'checked':''}}">
-               <img src="img/demo-avatar.jpg">
-             </div>
-            <p>小明</p>
-        </div>
-        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('c')">
-            <div class="item-avatar {{vm.c?'checked':''}}">
-               <img src="img/demo-avatar.jpg">
-             </div>
-            <p>小红</p>
-        </div>
-        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('d')">
-            <div class="item-avatar {{vm.d?'checked':''}}">
-               <img src="img/demo-avatar.jpg">
-             </div>
-            <p>小新</p>
-        </div>
-        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('e')">
-            <div class="item-avatar {{vm.e?'checked':''}}">
-               <img src="img/demo-avatar.jpg">
-             </div>
-            <p>dave</p>
-        </div>
-        <div class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail('f')">
-            <div class="item-avatar {{vm.f?'checked':''}}">
-               <img src="img/demo-avatar.jpg">
-             </div>
-            <p>小二</p>
-        </div>
+            <div ng-repeat="user in vm.users" class="avatar-wrapper col-20" ng-click="vm.chooseUsersDetail(user.id)">
+                <div class="item-avatar {{vm.selected[user.id].selected?'checked':''}}">
+                   <img src="img/demo-avatar.jpg">
+                 </div>
+                <p>{{user.name}}</p>
+            </div>
 		</div>
 	</ion-content>
 	<ion-footer-bar ng-if="vm.isDetail" align-title="left">

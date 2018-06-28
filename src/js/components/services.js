@@ -103,6 +103,13 @@
             params = bObj;
             method = 'POST';
             callback = defaultCb;
+            break;
+          }
+          case 'getOrgUserTree': {
+            url = base + 'getOrgUserTree';
+            method = 'GET';
+            callback = defaultCb;
+            break;
           }
         }
         console.log(url)

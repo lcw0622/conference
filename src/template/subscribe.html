@@ -3,8 +3,12 @@
         <button class="button button-icon icon ion-ios-arrow-back" on-tap="vm.goBack()"></button>
     </ion-nav-buttons>
     <ion-content class="has-header" overflow-scrolling="false">
+
         <ion-refresher ng-if="vm.lists.length !== 0" pulling-text="下拉刷新" on-refresh="vm.doRefresh()"></ion-refresher>
-        <div class="list-default" ng-if="vm.lists.length == 0">暂无内容</div>
+        <!--SSO:{{vm.token}} &nbsp;&nbsp;UserName:{{vm.username}}-->
+        <div class="list-default" ng-if="vm.lists.length == 0">
+            暂无内容
+        </div>
         <ion-list ng-if="vm.lists.length != 0">
             <ion-item class="subscribe item-thumbnail-left conference-brief white-bg" ng-repeat="list in vm.lists">
                 <div class="row" ui-sref="conferenceDetail({id: list.id})">

@@ -29,8 +29,12 @@
       // vm.listItem = '';
       // vm.isActive = true;
       // vm.disabled = true; // 滚动加载开关
+
+      vm.username = ''
+      vm.token = $rootScope.sso
+      console.log(vm.token)
+
       $scope.$on('$ionicView.afterEnter', function(){
-        console.log($rootScope.sso)
         if ($rootScope.sso == undefined || $rootScope.sso == '' ) {
           getSSOticket.getTicket(function () {
             vm.getRecentConferenceApplyList();
