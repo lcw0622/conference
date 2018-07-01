@@ -15,15 +15,19 @@
     vm.formatSrc = formatSrc;
     vm.closePage = closePage;
     vm.init = init;
-    vm.getRecentConferenceApplyList = getRecentConferenceApplyList;
+    vm.getList = getList;
     vm.pushRefresh = pushRefresh;
     vm.nextPage = nextPage;
     vm.init();
+    vm.script='';
+    vm.runScript = runScript;
     $rootScope.backStatus = 'close';
+    vm.currentTab = 'latest';
+    vm.switchTab = switchTab;
 
     function init() {
-      // vm.startRows = 0;
-      // vm.pageSize = 5;
+      vm.pageNum = 1;
+      vm.pageSize = 50;
       // vm.rowsCount = 1; // 滚动加载次数
       // vm.listData = '';
       // vm.listItem = '';
@@ -37,34 +41,62 @@
       $scope.$on('$ionicView.afterEnter', function(){
         if ($rootScope.sso == undefined || $rootScope.sso == '' ) {
           getSSOticket.getTicket(function () {
-            vm.getRecentConferenceApplyList();
+            vm.getList();
           });
         } else {
-          vm.getRecentConferenceApplyList();
+          vm.getList();
         }
       });
     }
     function formatSrc(src) {
       return $sce.trustAsResourceUrl(src);
     }
+    function runScript() {
+      var ret = eval(vm.script)
+      alert(ret)
+    }
 
     //获取会议室列表
-    function getRecentConferenceApplyList() {
+    function getList() {
       var dataStr = {
-        'ssoTicket.s': $rootScope.sso,
         'userId': $scope.dateValue,
         'orderBy': vm.startRows,
-        'pageSize.s': vm.pageSize
+        'pageNum': 1,
+        pageSize: vm.pageSize
       };
-      publicService.sendRequest('getRecentConferenceApplyList', dataStr, function(data) {
+      var typeMap = {
+        'latest': 'getRecentConferenceApplyList',
+        'history': 'history',
+        'subscribe': 'getMySubscribe'
+      };
+      publicService.sendRequest(typeMap[vm.currentTab], dataStr, function(data) {
         console.log(data);
+        var list = [];
+        var count = 0;
         vm.isActive = false;
         vm.code = data.status?0:-1;
         if (vm.code === 0) {
           // 判断是否执行滚动加载
-          if (data.data.datas && data.data.datas.length) {
+          switch(vm.currentTab) {
+            case 'latest': {
+              list = data.data.datas;
+              count = data.data.count;
+              break;
+            }
+            case 'history': {
+              list = data.data;
+              count = 0;
+              break;
+            }
+            case 'subscribe': {
+              list = data.data.datas;
+              count = data.data.count;
+              break;
+            }
+          }
+          if (list && list.length) {
             // vm.listData = data.data.datas.shift(); //count
-            vm.listItem = data.data.datas;
+            vm.listItem = list;
             vm.count = data.data.count;
             console.log(vm.listData,vm.listItem)
             if (vm.count < vm.pageSize) {
@@ -98,7 +130,7 @@
         vm.startRows = 0;
         vm.rowsCount = 1;
         // vm.isActive = true;
-        vm.getRecentConferenceApplyList();
+        vm.getList();
       }, 50);
       vm.disabled = true;
     }
@@ -106,10 +138,7 @@
     // 滚动加载
     function nextPage() {
       var dataStr = {
-        'ssoTicket.s': $rootScope.sso,
-        'seachDate.s': $scope.dateValue,
-        'startRows.i': vm.rowsCount * vm.pageSize,
-        'pageSize.i': vm.pageSize
+        pageNum: '',
       };
       publicService.sendRequest('getRoomList', dataStr, function(data) {
         vm.code = data[0]['h'][0]['code.i'];
@@ -143,6 +172,13 @@
           $scope.$broadcast('scroll.refreshComplete');
         }
       });
+    }
+
+
+    function switchTab(tabName){
+      vm.currentTab = tabName;
+      vm.listItem = [];
+      vm.getList();
     }
     /*
      * 关闭轻应用

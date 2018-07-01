@@ -32,12 +32,6 @@
                 vm.getDatas();
             });
 
-          var query = decodeURIComponent(window.location.search.replace(/^\?/, ''))
-          var token = query.match(/token=([a-z\d\-]+)/)[1]
-          var username = query.match(/username=([a-z\d\-]+)/)[1]
-          vm.token = token
-          vm.username = username
-
           appnest.config.getUserInfo({
             success: function (res) {
               vm.username= res.userName; // 用户名

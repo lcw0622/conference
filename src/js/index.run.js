@@ -16,7 +16,7 @@
     var query = decodeURIComponent(window.location.search.replace(/^\?/, ''))
     var token = query.match(/token=([a-z\d\-]+)/)[1]
 		console.log(token)
-		$rootScope.sso = token
+		$rootScope.token = token
 	}
 	function dateTimePicker($ionicPickerI18n) {
 		$ionicPickerI18n.weekdays = ['日', '一', '二', '三', '四', '五', '六'];

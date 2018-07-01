@@ -1,6 +1,5 @@
 (function () {
   'use strict';
-  var uid = ''
   angular.module('app')
     .factory('publicService', publicService)
     .factory('getSSOticket', getSSOticket);
@@ -38,8 +37,6 @@
         //         duration: 3000
         //     });
         // });
-
-
 
         // 假数据
         var url = '/js/json/' + postMethod + '.json';
@@ -111,6 +108,13 @@
             callback = defaultCb;
             break;
           }
+          case 'checkSso': {
+            url = 'http://10.30.1.231:8080/meeting-manager/conferenceOpenApi/checkSso';
+            method = 'POST';
+            params = {token: $rootScope.token};
+            callback = defaultCb;
+            break;
+          }
         }
         console.log(url)
         $http({
@@ -139,16 +143,26 @@
   }
 
   // getSSOticket
-  function getSSOticket($rootScope, $state, $ionicHistory, $location) {
+  function getSSOticket($rootScope, $state, $ionicHistory, $location, publicService) {
     return {
       getTicket: function (callBack) {
-        // console.log(ns)
-        var query = decodeURIComponent(window.location.search.replace(/^\?/, ''))
-        var token = query.match(/token=([a-z\d\-]+)/)[1]
-        uid = token
-        $rootScope.sso = token
+
+        if(!window.chrome) {
+          publicService.sendRequest('checkSso', {}, function(data){
+            if (data.status) {
+              $rootScope.sso = data;
+            }else {
+              alert(JSON.stringify(data));
+              alert(JSON.stringify(window.location.search));
+              $rootScope.sso = '6ef1f325-13d1-49af-bc32-249f8966cd5d'
+            }
+            callBack()
+          });
+        } else {
+          $rootScope.sso = '6ef1f325-13d1-49af-bc32-249f8966cd5d';
+          callBack()
+        }
         // alert(token)
-        callBack()
       }
     };
   }

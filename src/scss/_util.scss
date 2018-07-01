@@ -151,3 +151,25 @@
         color: $light;
     }
 }
+
+
+.tabs-top {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9;
+    >.tabs {
+        position: fixed;
+        top: 0;
+        height: 40px;
+        line-height: 40px;
+        .tab-item{
+        }
+    }
+}
+
+.double-header{
+    .list{
+        padding-top: 41px;
+    }
+}

@@ -136,7 +136,7 @@
         agenda: vm.agenda,
         boardroomId: vm.roomId,
         meetingType: '1',
-        participants: participants,
+        participants: participants.replace(/,$/, ''),
         fileIds: '',
         reserveInfo: vm.dateValue + '_' + vm.reserveType
       };
@@ -150,7 +150,7 @@
         return;
       }
       publicService.sendRequest('apply', params, function (msg) {
-        var code = msg.result ? 0 : -1;
+        var code = msg.status ? 0 : -1;
         if (code == 0) {
           vm.result = msg.data;
           if (vm.result) {
