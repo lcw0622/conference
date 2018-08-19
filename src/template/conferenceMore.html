@@ -5,21 +5,159 @@
 	<ion-content class="has-footer" >
 		<div ng-if="vm.data.field == 'file'">
 			<ion-list ng-if="vm.data.data">
-
+				<ion-item ng-repeat="list in vm.data.data" ng-click="vm.downloadFile(list.relativePath, list.fileName)">
+					{{list.fileName}}
+				</ion-item>
 			</ion-list>
-			<span ng-if="!vm.data.files">No Files!</span>
+			<span ng-if="!vm.data.data">
+				<div class="list-default">暂无内容</div>
+			</span>
 
 		</div>
 		<div ng-if="vm.data.field == 'address'">
-			No address !
+			<!--<div class="list-default">暂无内容</div>-->
+			<ion-list class="mb10 c4A f16 ">
+				<ion-item class="subscribe item-borderless">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">会议室</div>
+						<div class="col col-75 ar">{{vm.data.data.boardroomName}}</div>
+					</div>
+				</ion-item>
+			</ion-list>
+			<ion-list class="mb10 c4A f16 ">
+				<ion-item class="subscribe item-borderless">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">楼层</div>
+						<div class="col col-75 ar">{{vm.data.data.floor}}</div>
+					</div>
+				</ion-item>
+			</ion-list>
+			<ion-list class="mb10 c4A f16 ">
+				<ion-item class="subscribe item-borderless">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">房间</div>
+						<div class="col col-75 ar">{{vm.data.data.room}}</div>
+					</div>
+				</ion-item>
+			</ion-list>
+			<ion-list class="mb10 c4A f16 ">
+				<ion-item class="subscribe item-borderless">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">地址</div>
+						<div class="col col-75 ar">{{vm.data.data.address}}</div>
+					</div>
+				</ion-item>
+			</ion-list>
+
 		</div>
 		<div ng-if="vm.data.field == 'notice'">
+			<div class="list-default" ng-if="!vm.data.data">暂无内容</div>
 			{{vm.data.data}}
 		</div>
 		<div ng-if="vm.data.field == 'members'">
 			<ion-list>
 				<ion-item ng-repeat="list in vm.data.data">
 					{{list.realName}}
+				</ion-item>
+			</ion-list>
+		</div>
+		<div ng-if="vm.data.field == 'group'">
+			<ion-list>
+				<ion-item ng-repeat="list in vm.data.data">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">组名</div>
+						<div class="col col-75 ">{{list.groupName}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">组长</div>
+						<div class="col col-75 ">{{list.leader}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">组员</div>
+						<div class="col col-75  white-space">{{list.members}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">主题</div>
+						<div class="col col-75 ">{{list.subject}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">时间</div>
+						<div class="col col-75 ">{{list.discussTime}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">地点</div>
+						<div class="col col-75 ">{{list.place}}</div>
+					</div>
+				</ion-item>
+			</ion-list>
+		</div>
+		<div ng-if="vm.data.field == 'schedule'">
+			<ion-list>
+				<ion-item ng-repeat="list in vm.data.data">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">日程日期</div>
+						<div class="col col-75 ">{{list.scheduleDate}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">时间</div>
+						<div class="col col-75 ">{{list.startTime + ' 至 ' + list.endTime}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">主题</div>
+						<div class="col col-75  white-space">{{list.subject}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">演讲人</div>
+						<div class="col col-75 ">{{list.speaker}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">简介</div>
+						<div class="col col-75  white-space">{{list.introduction}}</div>
+					</div>
+				</ion-item>
+			</ion-list>
+		</div>
+		<div ng-if="vm.data.field == 'dinner'">
+			<ion-list>
+				<ion-item ng-repeat="list in vm.data.data">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">用餐日期</div>
+						<div class="col col-75 ">{{list.mealDate}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">用餐类型</div>
+						<div class="col col-75 ">
+							<span ng-if="list.mealType == 1">早餐</span>
+							<span ng-if="list.mealType == 2">午餐</span>
+							<span ng-if="list.mealType == 3">晚餐</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">用餐时间</div>
+						<div class="col col-75 ">{{list.startTime + ' 至 ' + list.endTime}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">用餐地点</div>
+						<div class="col col-75 white-space">{{list.palace}}</div>
+					</div>
+				</ion-item>
+			</ion-list>
+		</div>
+		<div ng-if="vm.data.field == 'staff'">
+			<ion-list>
+				<ion-item ng-repeat="list in vm.data.data">
+					<div class="row">
+						<div class="col col-25 titleMeet-25">姓名</div>
+						<div class="col col-75 ">{{list.name}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">职务</div>
+						<div class="col col-75 ">{{list.duty}}</div>
+					</div>
+					<div class="row">
+						<div class="col col-25 titleMeet-25">工作内容</div>
+						<div class="col col-75 white-space">{{list.workContent}}</div>
+					</div>
 				</ion-item>
 			</ion-list>
 		</div>

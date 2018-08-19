@@ -14,9 +14,17 @@
 			// $rootScope.parkID = 'P001';
 		}
     var query = decodeURIComponent(window.location.search.replace(/^\?/, ''))
-    var token = query.match(/token=([a-z\d\-]+)/)[1]
-		console.log(token)
+    var token = query.match(/token=([a-z\d\-_]+)/)[1]
+    var type = query.match(/type=([a-z\-]+)/)
+		var id
+		if(type && type[1]){
+			type = type[1]
+			id = query.match(/id=([a-z\d\-]+)/)[1]
+		}
+		console.log(type, id)
 		$rootScope.token = token
+		$rootScope.type = type
+		$rootScope.confId = id
 	}
 	function dateTimePicker($ionicPickerI18n) {
 		$ionicPickerI18n.weekdays = ['日', '一', '二', '三', '四', '五', '六'];
@@ -27,11 +35,12 @@
 		$ionicPickerI18n.cancelClass = 'button-stable';
 	}
 
-	if (window.appnest === undefined) {
-		window.appnest = {
-			config: {
-				getUserInfo: function(){}
-			}
-		}
-	}
+	// if (window.appnest === undefined) {
+	// 	window.appnest = {
+	// 		config: {
+	// 			getUserInfo: function(){}
+	// 		}
+	// 	}
+	// }
+
 })();

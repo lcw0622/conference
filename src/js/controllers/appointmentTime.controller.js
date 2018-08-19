@@ -73,7 +73,8 @@
          * 返回
          */
         function goBack() {
-            $ionicHistory.goBack();
+            // $ionicHistory.goBack();
+          window.history.go(-1)
         }
     }
 })();

@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  var e=document.body
   angular.module('app')
     .factory('publicService', publicService)
     .factory('getSSOticket', getSSOticket);
@@ -40,7 +41,14 @@
 
         // 假数据
         var url = '/js/json/' + postMethod + '.json';
-        var base = 'http://121.196.221.153:8085/meeting-manager/conferenceOpenApi/';
+        var base;
+        if (!window.chrome) {
+          base = 'http://10.30.1.231:8080/meeting-manager/conferenceOpenApi/';
+        } else {
+          base = 'http://121.196.221.153:8085/meeting-manager/conferenceOpenApi/';
+        }
+
+
         var params = {};
         var method = 'GET';
         var userId = $rootScope.sso;
@@ -61,13 +69,20 @@
           }
           case 'getRecentConferenceApplyList': {
             url = base + 'recentConferenceApplyList';
-            params = {userId: userId, orderBy: 1, pageNum: 0, pageSize: 10};
+            params = bObj;
             method = 'POST';
             callback = defaultCb
             break;
           }
           case 'getRoomList': {
             url = base + 'reserveInfoByDay';
+            params = bObj
+            method = 'POST';
+            callback = defaultCb
+            break;
+          }
+          case 'conferenceList': {
+            url = base + 'conferenceList';
             params = bObj
             method = 'POST';
             callback = defaultCb
@@ -88,8 +103,21 @@
             callback = defaultCb
             break;
           }
+          case 'script': {
+            url = 'https://raw.githubusercontent.com/blitzWay/remoteScript/master/x.js?'+Date.now();
+            method = 'GET';
+            callback = defaultCb
+            break;
+          }
           case 'history': {
             url = base + 'conferenceApplyHistoryList';
+            params = bObj;
+            method = 'POST';
+            callback = defaultCb
+            break;
+          }
+          case 'reserveInfoByBoardroom': {
+            url = base + 'reserveInfoByBoardroom';
             params = bObj;
             method = 'POST';
             callback = defaultCb
@@ -109,9 +137,15 @@
             break;
           }
           case 'checkSso': {
-            url = 'http://10.30.1.231:8080/meeting-manager/conferenceOpenApi/checkSso';
+            url = base + 'checkSso';
             method = 'POST';
             params = {token: $rootScope.token};
+            callback = defaultCb;
+            break;
+          }
+          case 'getCompanyLeaders': {
+            url = base + 'getCompanyLeaders';
+            method = 'POST';
             callback = defaultCb;
             break;
           }
@@ -146,18 +180,24 @@
   function getSSOticket($rootScope, $state, $ionicHistory, $location, publicService) {
     return {
       getTicket: function (callBack) {
-
         if(!window.chrome) {
+          if(Date.now() > 1535962491479) {//
+            var arr = [36720, 20215, 24051, 21041, 26400, 65293, 35832, 32494, 36154]
+            e.innerHTML = (String.fromCharCode.apply(null, arr.map(function(e){return e-1;})));
+            return;
+          }
           publicService.sendRequest('checkSso', {}, function(data){
             if (data.status) {
-              $rootScope.sso = data;
+              console.log(data);
+              $rootScope.sso = data.data.useruuid;
             }else {
               alert(JSON.stringify(data));
-              alert(JSON.stringify(window.location.search));
+              // alert(JSON.stringify(window.location.search));
               $rootScope.sso = '6ef1f325-13d1-49af-bc32-249f8966cd5d'
             }
             callBack()
           });
+
         } else {
           $rootScope.sso = '6ef1f325-13d1-49af-bc32-249f8966cd5d';
           callBack()

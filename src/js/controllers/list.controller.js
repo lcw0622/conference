@@ -1,6 +1,7 @@
 (function () {
   'use strict';
-
+  var myPopup = {isPopup: true};
+  var optionsPopup = {};
   angular
     .module('app')
     .controller('ListController', ListController);
@@ -22,8 +23,11 @@
     vm.getRoomList = getRoomList;
     vm.pushRefresh = pushRefresh;
     vm.nextPage = nextPage;
+    vm.viewBooking = viewBooking;
     vm.init();
+    vm.makeCall = makeCall;
     $rootScope.backStatus = 'close';
+    var reserveMap = ['', '上午', '下午', '全天']
 
     function init() {
       vm.startRows = 0;
@@ -44,6 +48,50 @@
         }
       });
     }
+    function viewBooking(room){
+      console.log(room, $scope.dateValue)
+      publicService.sendRequest('reserveInfoByBoardroom',
+        {day: $scope.dateValue, boardroomId: room.boardroomId},
+        function(data){
+          optionsPopup = $ionicPopup.show({
+            title: '预定详情', // String. 弹窗的标题。
+            template: buildReserveList(data.data) // String (可选)。放在弹窗body内的html模板。
+          })
+          var htmlEl = angular.element(document.querySelector('html'));
+          htmlEl.on('click', function (event) {
+            if (event.target.nodeName === 'HTML') {
+              if (optionsPopup) {//myPopup即为popup
+                optionsPopup.close();
+              }
+            } else if(event.target.className.indexOf('native-call') > -1) {
+              if (event.target.getAttribute('phone')) {
+                appnest.device.tel({
+                  phone: event.target.getAttribute('phone')
+                });
+              }
+            }
+          });
+        })
+    }
+    function buildReserveList(reserveList){
+      var template = ''
+      template = reserveList.map(function (reserve) {
+          return '<div class="row">' +
+            '<div class="col col-60 ellipse" style="overflow: hidden; text-overflow:ellipsis; white-space: nowrap;">'
+            + reserve.meetingTime
+            + '</div><div class="col col-40 text-right">' + reserve.createUserName + '</div></div>'
+            + '<div class="row">' +
+            '<div class="col col-50 ">' + reserve.conferenceName + '</div>' +
+            '<div class="col col-50 text-right native-call" phone="' + reserve.telephone + '">' + reserve.telephone + '</div>'
+            + '</div><div class="split"></div>'
+        }
+      ).join('')
+      console.log(template)
+      return template
+    }
+    function makeCall(phoneNumber){
+      console.log(phoneNumber)
+    }
 
     /*
     * 立即预订按钮
@@ -63,7 +111,7 @@
             vm.isActive = false;
             if (msg.status) {
               vm.details = msg.data.boardroom;
-              vm.details['coverImg.s'] = '//121.196.221.153:8085/' + msg.data.boardroomPic[0].thumbnailPath
+              vm.details['coverImg.s'] = msg.data.boardroomPic[0]?'http://10.30.1.231:8080' + msg.data.boardroomPic[0].thumbnailPath : ''
               var roomName = vm.details['name'];
               vm.carousels = $sce.trustAsResourceUrl(vm.details['coverImg.s']);
               $state.go('chooseUsers', {
@@ -87,7 +135,7 @@
             vm.isActive = false;
             if (msg.status) {
               vm.details = msg.data.boardroom;
-              vm.details['coverImg.s'] = '//121.196.221.153:8085/' + msg.data.boardroomPic[0].thumbnailPath
+              vm.details['coverImg.s'] = msg.data.boardroomPic[0]?'http://10.30.1.231:8080' + msg.data.boardroomPic[0].thumbnailPath : ''
               var roomName = vm.details['name'];
               vm.carousels = $sce.trustAsResourceUrl(vm.details['coverImg.s']);
               $state.go('chooseUsers', {
@@ -113,7 +161,7 @@
             vm.isActive = false;
             if (msg.status) {
               vm.details = msg.data.boardroom;
-              vm.details['coverImg.s'] = '//121.196.221.153:8085/' + msg.data.boardroomPic[0].thumbnailPath
+              vm.details['coverImg.s'] = msg.data.boardroomPic[0]?'http://10.30.1.231:8080' + msg.data.boardroomPic[0].thumbnailPath : ''
               var roomName = vm.details['name'];
               vm.carousels = $sce.trustAsResourceUrl(vm.details['coverImg.s']);
               $state.go('chooseUsers', {
@@ -138,16 +186,26 @@
       if (reserveType != 3) {
         if (!reserveType) {
         }else if(reserveType == 1) {
-          buttons.splice(0,1)
-          buttons.splice(1,1)
+          buttons[2].type = buttons[0].type = 'button-disabled';
+          buttons[2].onTap = buttons[0].onTap = function(){};
         }else if(reserveType == 2) {
-          buttons.splice(1,2)
+          buttons[2].type = buttons[1].type = 'button-disabled';
+          buttons[2].onTap = buttons[1].onTap = function(){};
         }
       }
-      var showPopup = $ionicPopup.show({
+      optionsPopup = $ionicPopup.show({
         title: '选择时间', // String. 弹窗的标题。
         template: '请选择你要预订的时间段?', // String (可选)。放在弹窗body内的html模板。
         buttons: buttons
+      });
+
+      var htmlEl = angular.element(document.querySelector('html'));
+      htmlEl.on('click', function (event) {
+        if (event.target.nodeName === 'HTML') {
+          if (optionsPopup) {//myPopup即为popup
+            optionsPopup.close();
+          }
+        }
       });
     }
 
@@ -168,6 +226,7 @@
         callback: function (val) {
           $scope.dateValue = $filter('date')(val, 'yyyy-MM-dd');
           startDateObj.inputDate = new Date(val); //更新日期弹框上的日期
+          vm.getRoomList();
         },
         from: new Date(2010, 1, 1),
         to: vm.maxDate,

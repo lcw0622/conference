@@ -25,24 +25,26 @@
     vm.init();
 
     function init() {
-      publicService.sendRequest('getOrgUserTree', {},
+      publicService.sendRequest('getCompanyLeaders', {},
         function (data) {
           var users = data.data
-          vm.users = users.filter(function (node) {
-            return node.nodeType === '3'
-          })
-          $rootScope.selected = {}
-          vm.users.forEach(function(value){
-            $rootScope.selected[value.id] = value
-          })
+          vm.users = users;
 
-          vm.selected = $rootScope.selected
+          if(!$rootScope.selectedLeaders){
+            $rootScope.selectedLeaders = {}
+            vm.users.forEach(function(value){
+              $rootScope.selectedLeaders[value.id] = value
+            })
+          }
+
+          vm.selectedLeaders = $rootScope.selectedLeaders
         })
 
     }
 
     function chooseUsersDetail(userId) {
-      vm.selected[userId].selected = !vm.selected[userId].selected
+      console.log(userId)
+      vm.selectedLeaders[userId].selected = !vm.selectedLeaders[userId].selected
       return false;
     }
 
@@ -63,7 +65,8 @@
      * flag 1表示预订时间跳转到这个页面，2表示壳子端消息，3表示从我的预订点击过来查看详情
      */
     function goBack() {
-      $ionicHistory.goBack();
+      // $ionicHistory.goBack();
+      window.history.go(-1)
     }
   }
 })();

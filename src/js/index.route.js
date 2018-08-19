@@ -84,7 +84,7 @@
         controllerAs: 'vm'
       })
       .state('conferenceDetail', {
-        url: '/conferenceDetail/:id/:mode',
+        url: '/conferenceDetail/:id/:from',
         cache: false,
         templateUrl: 'template/conferenceDetail.html',
         controller: 'conferenceDetailController',
@@ -104,6 +104,17 @@
         controller: 'historyController',
         controllerAs: 'vm'
       });
+    var query = decodeURIComponent(window.location.search.replace(/^\?/, ''))
+    var type = query.match(/type=([a-z\d\-]+)/)
+    var id
+    if(type && type[1]){
+      type = type[1]
+      id = query.match(/id=([a-z\d\-]+)/)[1]
+      if(type==='apply'){
+        $urlRouterProvider.otherwise('/conferenceDetail/'+id+'/1', {id: id, flag: 1});
+        return
+      }
+    }
     $urlRouterProvider.otherwise('/main');
   }
 })();

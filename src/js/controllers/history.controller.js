@@ -57,7 +57,7 @@
       var dataStr = {
         name: '',
         pageNum: 1,
-        pageSize: 10
+        pageSize: 50
       };
       publicService.sendRequest('history', dataStr, function (data) {
         vm.isActive = false;

@@ -12,6 +12,7 @@
     vm.goBack = goBack;
     vm.init = init;
     vm.chooseUsers = chooseUsers;
+    vm.chooseLeaders = chooseLeaders;
     vm.saveBtnClick = saveBtnClick;
     vm.getDetail = getDetail;
     vm.dTitle = '选择人员';
@@ -21,13 +22,15 @@
     vm.noticeSelect = '2';
     vm.isDetail = true; //判断false是选择页面 ,true是展示详情的页面
     vm.isActive = true;
-    vm.selected = $rootScope.selected
+    vm.selected = $rootScope.selected;
+    vm.selectedLeaders = $rootScope.selectedLeaders;
     $rootScope.backStatus = 'detail';
     vm.init();
 
     function init() {
       var sta = ['', '08:00', '12:00', '00:00']
       var stb = ['', '12:00', '18:00', '24:00']
+      var reservTypes = ['', '上午', '下午', '全天']
       $stateParams.sTime = $stateParams.dateValue + ' ' + sta[$stateParams.reserveType];
       $stateParams.eTime = $stateParams.dateValue + ' ' + stb[$stateParams.reserveType];
       var all_user = localStorage.getItem('names');
@@ -35,7 +38,8 @@
       vm.flag = $stateParams.flag;
       if (vm.flag == 1) {
         //正常点击预订选择完人员后 点击保存显示数据
-        vm.meetingTime = $stateParams.sTime + '至' + $stateParams.eTime;
+        // vm.meetingTime = $stateParams.sTime + '至' + $stateParams.eTime;
+        vm.meetingTime = $stateParams.dateValue + ' ' + reservTypes[$stateParams.reserveType];
         vm.dateValue = $stateParams.dateValue;
         vm.reserveType = $stateParams.reserveType;
         vm.loginName = $stateParams.loginName;
@@ -54,6 +58,12 @@
           vm.getDetail();
         });
       }
+      console.log($rootScope.tempConference)
+      if ($rootScope.tempConference) {
+        vm.meetingTitle = $rootScope.tempConference.name;
+        vm.content = $rootScope.tempConference.content;
+        $rootScope.tempConference = null;
+      }
     }
 
     function getDetail() {
@@ -62,8 +72,8 @@
         'id.s': vm.subId
       };
       vm.isDetail = false;
-      vm.dTitle = '预定详情';
-      publicService.sendRequest('getRoomSubById', params, function (msg) {
+      vm.dTitle = '预订详情';
+      publicService.sendRequest('getRoomById', params, function (msg) {
         if (msg[0].h[0]['code.i'] == 0) {
           vm.details = msg[1].b[0].roomSub[0];
           vm.roomName = vm.details['roomName.s'];
@@ -76,60 +86,101 @@
       });
     }
 
-    function chooseUsers() {
+    function chooseLeaders() {
+      $rootScope.tempConference = {
+        name: vm.meetingTitle,
+        content: vm.content
+      };
       $state.go('chooseUsersDetail', {flag: 4});
-      console.log('fd');
+      // console.log('fd');
+      vm.flag = 4;
+      return false;
+    }
+
+    function chooseUsers() {
+      $rootScope.tempConference = {
+        name: vm.meetingTitle,
+        content: vm.content
+      };
+      // $state.go('chooseUsersDetail', {flag: 4});
+      // console.log('fd');
+      var selected;
+      if(vm.selected) {
+        selected = vm.selected.map(function(user){return user.imAccount})
+      }
+      appnest.contact.selectMembersUI({
+        type: 2,
+        imAccounts: selected,
+        success: function (res) {
+          var memberInfos= res.memberInfos; // 返回成员数组
+          $scope.$apply(function () {
+            $rootScope.selected = vm.selected = memberInfos
+            console.log(vm.selected)
+          });
+        },
+        fail: function (res) {
+          alert(res.errMsg);
+        }
+      });
       vm.flag = 4;
       return false;
 
 
       var list = [], i;
-      ns.runtime.contact({
-        'onSuccess': function (msg) {
-          list = msg.obj;
-          if (list.length <= 0) {
-            return false;
-          }
-          vm.memberNames = '';
-          vm.memberIds = '';
-          vm.memberLoginNames = '';
-          for (i = 0; i < list.length; i += 1) {
-            if ((i + 1) == list.length) {
-              vm.memberNames += list[i]['user'].realName;
-              vm.memberLoginNames += list[i]['user'].userName;
-              vm.memberIds += list[i]['userAgencyJobs'][0]['userId'];
-            } else {
-              vm.memberNames += list[i]['user'].realName + '、';
-              vm.memberLoginNames += list[i]['user'].userName + ',';
-              vm.memberIds += list[i]['userAgencyJobs'][0]['userId'] + ',';
-            }
-          }
-          //处理返回后无法自动刷新立刻显示的问题
-          setTimeout(function () {
-            $scope.$apply(function () {
-              vm.memberNames = vm.memberNames;
-            });
-          }, 200);
-        },
-        'onFail': function (msg) {
-          $ionicLoading.show({
-            template: '<span class="tips">人员选择打开失败</span>',
-            noBackdrop: true,
-            duration: 2000
-          });
-        }
-      });
+      // ns.runtime.contact({
+      //   'onSuccess': function (msg) {
+      //     list = msg.obj;
+      //     if (list.length <= 0) {
+      //       return false;
+      //     }
+      //     vm.memberNames = '';
+      //     vm.memberIds = '';
+      //     vm.memberLoginNames = '';
+      //     for (i = 0; i < list.length; i += 1) {
+      //       if ((i + 1) == list.length) {
+      //         vm.memberNames += list[i]['user'].realName;
+      //         vm.memberLoginNames += list[i]['user'].userName;
+      //         vm.memberIds += list[i]['userAgencyJobs'][0]['userId'];
+      //       } else {
+      //         vm.memberNames += list[i]['user'].realName + '、';
+      //         vm.memberLoginNames += list[i]['user'].userName + ',';
+      //         vm.memberIds += list[i]['userAgencyJobs'][0]['userId'] + ',';
+      //       }
+      //     }
+      //     //处理返回后无法自动刷新立刻显示的问题
+      //     setTimeout(function () {
+      //       $scope.$apply(function () {
+      //         vm.memberNames = vm.memberNames;
+      //       });
+      //     }, 200);
+      //   },
+      //   'onFail': function (msg) {
+      //     $ionicLoading.show({
+      //       template: '<span class="tips">人员选择打开失败</span>',
+      //       noBackdrop: true,
+      //       duration: 2000
+      //     });
+      //   }
+      // });
     }
 
     function saveBtnClick() {
       var participants = ''
+      var leaders = '';
       console.log(vm.selected)
-      var uids = Object.keys(vm.selected)
-      uids.forEach(function(userId){
-        if(vm.selected[userId].selected){
-          participants = participants + vm.selected[userId].id + ','
-        }
-      })
+      if(vm.selected){
+        vm.selected.forEach(function(user){
+          participants = participants + user.userUuid + ','
+        })
+      }
+      var ln;
+      if(vm.selectedLeaders){
+        ln = Object.keys(vm.selectedLeaders);
+        ln.forEach(function(user){
+          if(vm.selectedLeaders[user].selected)leaders = leaders + vm.selectedLeaders[user].id + ',';
+        })
+      }
+
       var params = {
         name: vm.meetingTitle,
         content: vm.content,
@@ -137,9 +188,11 @@
         boardroomId: vm.roomId,
         meetingType: '1',
         participants: participants.replace(/,$/, ''),
+        leaders: leaders.replace(/,$/, ''),
         fileIds: '',
         reserveInfo: vm.dateValue + '_' + vm.reserveType
       };
+
       if (vm.meetingTitle == undefined || vm.meetingTitle == '') {
         // 模态框
         $ionicLoading.show({
@@ -149,8 +202,12 @@
         });
         return;
       }
+      var loading = $ionicLoading.show({
+        template: '<span class="tips">正在提交</span>',
+      });
       publicService.sendRequest('apply', params, function (msg) {
         var code = msg.status ? 0 : -1;
+        $ionicLoading.hide();
         if (code == 0) {
           vm.result = msg.data;
           if (vm.result) {
@@ -163,6 +220,9 @@
               noBackdrop: true,
               duration: 2000
             });
+            setTimeout(function(){
+              window.history.go(-1)
+            }, 1000)
           } else {
             $ionicLoading.show({
               template: '<span class="tips">预约失败</span>',
@@ -172,6 +232,9 @@
             vm.isDetail = true;
             vm.dTitle = '选择人员';
           }
+          $rootScope.selected = null;
+          $rootScope.selectedLeaders = null;
+          $rootScope.tempConference = {};
         } else {
           $ionicLoading.show({
             template: '<span class="tips">预约失败，' + msg.msg + '</span>',
@@ -187,17 +250,16 @@
      * flag 1表示预订时间跳转到这个页面，2表示壳子端消息，3表示从我的预订点击过来查看详情
      */
     function goBack() {
-      window.history.back()
-      // if (vm.flag == 1) {
-      //   $ionicHistory.goBack();
-      // } else if (vm.flag == 2) {
-      //   //点击壳子的消息跳转过来直接返回 列表页面
-      //   ns.runtime.closePage();
-      //   // $state.go('list', {});
-      // } else if (vm.flag == 3) {
-      //   //返回我的预订页面
-      //   $ionicHistory.goBack();
-      // }
+      $rootScope.selected = null;
+      vm.selectedLeaders = $rootScope.selectedLeaders = null;
+      $rootScope.tempConference = {};
+      window.history.back();
+    }
+
+    function resetForm() {
+      $rootScope.selected = null;
+      vm.selectedLeaders = $rootScope.selectedLeaders = null;
+      $rootScope.tempConference = {};
     }
   }
 })();

@@ -14,21 +14,29 @@
     vm.goBack = goBack;
     vm.init = init;
     vm.getConferenceDetail = getConferenceDetail
-    vm.toMore = toMore
-    vm.conference = {}
-    vm.isEdit = false
-    vm.init()
-
+    vm.toMore = toMore;
+    vm.conference = {};
+    vm.isEdit = false;
+    vm.br = '<br>';
+    vm.from = ''; // 0: from my subscribe
+    vm.nativeCall = nativeCall;
     function init() {
       vm.getConferenceDetail($stateParams.id)
-
+      vm.from = $stateParams.from
     }
+    vm.init();
 
     function getConferenceDetail(id) {
       publicService.sendRequest('conference',
         {id: id},
         function (resp) {
           vm.conference = resp.data
+          var leaders = resp.data.leaders;
+          if(!leaders.filter(function(e){return e.checked}).length){
+            vm.showLeader = false;
+          }else{
+            vm.showLeaders = true
+          }
         })
     }
     function toMore(field) {
@@ -45,7 +53,8 @@
           break;
         }
         case 'notice': {
-          title = '会议须知'
+          title = '会议须知';
+          data = vm.conference.info.agenda;
           break;
         }
         case 'members': {
@@ -53,9 +62,24 @@
           data = vm.conference.participants
           break;
         }
+        case 'group': {
+          title = '会议分组'
+          data = vm.conference.conferenceGroups
+          break;
+        }
+        case 'schedule': {
+          title = '会议日程'
+          data = vm.conference.schedules
+          break;
+        }
         case 'dinner': {
           title = '用餐信息'
-          data = vm.conference.participants
+          data = vm.conference.dinners
+          break;
+        }
+        case 'staff': {
+          title = '会务人员'
+          data = vm.conference.staffs
           break;
         }
       }
@@ -64,7 +88,21 @@
     }
 
     function goBack() {
-      $ionicHistory.goBack();
+      var type = window.decodeURIComponent(window.location.search).match(/type=([a-z\d\-]+)/)
+      if(type && type[1]){
+        type = type[1]
+        if(type==='apply' && window.appnest){
+          appnest.navigation.closeWindow();
+        }
+      }
+      window.history.go(-1)
+    }
+    function nativeCall(phoneNumber) {
+      if(phoneNumber){
+        appnest.device.tel({
+          phone: event.target.getAttribute('phone')
+        });
+      }
     }
   }
 })();
